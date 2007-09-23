@@ -1,0 +1,19 @@
+---
+
+# Change log for Perl module Remind-Parser
+
+# This file is in YAML format; see <URL:http://www.yaml.org/>
+# for more information
+
+- date: 2007-09-19
+  notes:
+    - First code
+
+- date: 2007-09-22
+  version: 0.01
+  changes:
+    - Add standard tests in t/
+    - strict() method documented
+  notes:
+    - First release
+
