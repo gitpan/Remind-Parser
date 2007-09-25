@@ -1,11 +1,11 @@
 ---
 name: Remind-Parser
-version: 0.01
+version: 0.02
 author: Paul Hoffman (nkuitse AT cpan DOT org)
 abstract: parse `remind -lp' output
 license: perl
 provides:
   Remind::Parser:
     file: lib/Remind/Parser.pm
-    version: 0.01
+    version: 0.02
 generated_by: Module::Build version 0.25

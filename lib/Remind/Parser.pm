@@ -5,14 +5,7 @@ use warnings;
 
 use vars qw($VERSION);
 
-$VERSION = '0.01';
-
-unless (caller()) {
-    eval "require YAML"
-        or die "YAML required to run the package source as a filter";
-    my $reminders = __PACKAGE__->new->parse(\*STDIN);
-    print YAML::Dump($reminders);
-}
+$VERSION = '0.02';
 
 # --- Constructor
 
@@ -45,6 +38,7 @@ sub parse {
     my %loc2count;
     my $next_event = 1;
     my $start = <$fh>;
+    return [] unless defined $start;
     if ($start !~ /^# rem2ps begin$/) {
         die "First line of input is not the proper header: $_"
             if $self->strict;
@@ -92,7 +86,7 @@ sub parse {
                 else {
                     # Timed reminder
                     my $hour   = int($offset / 60);
-                    my $minute = $offset % $hour;
+                    my $minute = $offset % 60;
                     $reminder{'hour'}   = $hour;
                     $reminder{'minute'} = $minute;
                 }
