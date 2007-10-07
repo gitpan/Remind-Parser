@@ -2,10 +2,10 @@
 use ExtUtils::MakeMaker;
 WriteMakefile
 (
-          'PREREQ_PM' => {},
+          'NAME' => 'Remind-Parser',
           'PL_FILES' => {},
+          'PREREQ_PM' => {},
           'INSTALLDIRS' => 'site',
-          'VERSION_FROM' => 'lib/Remind/Parser.pm',
-          'NAME' => 'Remind-Parser'
+          'VERSION_FROM' => 'lib/Remind/Parser.pm'
         )
 ;

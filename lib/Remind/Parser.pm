@@ -5,7 +5,7 @@ use warnings;
 
 use vars qw($VERSION);
 
-$VERSION = '0.02';
+$VERSION = '0.04';
 
 # --- Constructor
 
@@ -64,6 +64,13 @@ sub parse {
             else {
                 my ($date, $special, $tag, $duration, $offset, $description) = split / +/, $_, 6;
                 my ($year, $month, $day) = split m{[-/]}, $date;
+                if ($description =~ s/^((\d\d?):(\d\d)([ap]m) )//) {
+                    # Strip the time -- but then restore it if it doesn't match
+                    #   the offset in minutes
+                    my ($H, $M, $pm) = ($2, $3, $4 eq 'pm');
+                    $description = $1 . $description
+                        unless $offset == _HMpm2min($H, $M, $pm);
+                }
                 my $event = $loc2event{$loc} ||= $next_event++;
                 my $instance = ++$loc2count{$loc};
                 my %reminder = (
@@ -85,10 +92,15 @@ sub parse {
                 }
                 else {
                     # Timed reminder
-                    my $hour   = int($offset / 60);
-                    my $minute = $offset % 60;
-                    $reminder{'hour'}   = $hour;
-                    $reminder{'minute'} = $minute;
+                    $reminder{'hour'}   = int($offset / 60);
+                    $reminder{'minute'} = $offset % 60;
+                    if ($duration ne '*') {
+                        $reminder{'duration'} = {
+                            'hours'   => int($duration / 60),
+                            'minutes' => $duration % 60,
+                            'seconds' => 0,
+                        };
+                    }
                 }
                 push @reminders, \%reminder;
             }
@@ -97,6 +109,12 @@ sub parse {
     return \@reminders;
 }
 
+sub _HMpm2min {
+    my ($H, $M, $pm) = @_;
+    my $base = $pm ? 12 * 60 : 0;
+    $H = 0 if $H == 12;  # 12:XXam --> 00:XXam, 12:XXpm --> 00:XXpm
+    return $base + $H * 60 + $M;
+}
 
 1;
 
@@ -184,6 +202,11 @@ event.  Otherwise, it's a timed event.
 The hour and minute of the reminder, if it's a timed reminder.  Absent
 otherwise.
 
+=item B<duration>
+
+If the reminder has a duration, this is set to a reference to a hash with
+B<hours>, B<minutes>, and B<seconds> elements with the appropriate values.
+
 =item B<tag>
 
 The B<TAG> string from the remind(1) source.  Absent if no B<TAG> string was
@@ -214,8 +237,9 @@ B<instance> identifiers.
 
 =head1 BUGS
 
-There are no known bugs.  Please report bugs to the author via e-mail
-(see below).
+There are no known bugs.  Please report any bugs or feature requests via RT at
+L<http://rt.cpan.org/NoAuth/Bugs.html?Queue=Remind-Parser>; bugs will be
+automatically passed on to the author via e-mail.
 
 =head1 TO DO
 

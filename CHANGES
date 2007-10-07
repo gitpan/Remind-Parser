@@ -28,3 +28,13 @@
   changes:
     - Fix egregious miscalculation of the minute of a reminder
 
+- date: 2007-09-25
+  version: 0.03
+  changes:
+    - Fix parsing of timed reminders (times were being included in descriptions)
+
+- date: 2007-10-06
+  version: 0.04
+  changes:
+    - Fix parsing of 12:XXam in timed reminders
+
