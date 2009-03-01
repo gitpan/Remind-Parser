@@ -38,3 +38,11 @@
   changes:
     - Fix parsing of 12:XXam in timed reminders
 
+- date: 2009-02-28
+  version: 0.05
+  changes:
+    - Add rem2yaml script
+    - Don't strip times from beginning unless skip_times is set
+    - Expanded documentation
+    - Other minor improvements
+

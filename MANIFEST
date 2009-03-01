@@ -5,6 +5,10 @@ Makefile.PL
 MANIFEST			This list of files
 META.yml
 README
+script/rem2yaml
 t/00-use.t
-t/98-pod-coverage.t
+t/01-days.t
 t/99-pod.t
+t/test-files/001.days
+t/test-files/001.rpo
+TODO
