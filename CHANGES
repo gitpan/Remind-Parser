@@ -46,3 +46,8 @@
     - Expanded documentation
     - Other minor improvements
 
+- date: 2009-02-28
+  version: 0.06
+  changes:
+    - Added Date::DayOfWeek as a prerequisite
+

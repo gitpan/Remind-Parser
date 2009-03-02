@@ -7,7 +7,7 @@ use vars qw($VERSION);
 
 use Date::DayOfWeek qw(dayofweek);
 
-$VERSION = '0.05';
+$VERSION = '0.06';
 
 # --- Constructor
 

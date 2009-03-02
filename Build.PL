@@ -10,8 +10,12 @@ my $build = Module::Build->new(
     'module_name'        => 'Remind-Parser',
     'dist_author'        => 'Paul Hoffman (nkuitse AT cpan DOT org)',
     'dist_version_from'  => 'lib/Remind/Parser.pm',
-    'requires'           => {},
-    'recommends'         => { 'YAML' => 0, },
+    'requires'           => {
+        'Date::DayOfWeek' => 0,
+    },
+    'recommends'         => {
+        'YAML' => 0,
+    },
     'build_requires'     => {
         'Test::More' => 0,
         'Data::Dumper' => 0,
