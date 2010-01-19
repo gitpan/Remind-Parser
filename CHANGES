@@ -51,3 +51,11 @@
   changes:
     - Added Date::DayOfWeek as a prerequisite
 
+- date: 2010-01-18
+  version: 0.07
+  changes:
+    - Fixed parsing of more than one month's events
+  notes:
+    - >-
+      Thanks to Michael Higgins <col@evolone.org> for
+      spotting the problem and providing a patch

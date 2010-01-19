@@ -26,6 +26,7 @@ $COPYRIGHT = "Copyright 2007-2008 Paul M. Hoffman";
 
 my $action = \&run;
 my $verbose;
+my $strict;
 my ($consolidate, $fill_gaps);
 my ($begin_date, $end_date);
 
@@ -43,6 +44,7 @@ GetOptions(
     'b|begin=s'     => sub { $begin_date = Remind::Parser::norm_date($_[1]) },
     'e|end=s'       => sub { $end_date = Remind::Parser::norm_date($_[1]) },
     'l|limit=s'     => sub { $end_date = day_before(Remind::Parser::norm_date($_[1])) },
+    's|strict'   => \$strict,
     'v|verbose'  => \$verbose,
     'h|help'     => sub { $action = \&help },
     'V|version'  => sub { $action = \&version },
@@ -57,7 +59,9 @@ $action->();
 # -------------------------------- Action functions
 
 sub run {
-    my $parser = Remind::Parser->new;
+    my %arg;
+    $arg{'strict'} = 1 if $strict;
+    my $parser = Remind::Parser->new(%arg);;
     my @reminders;
     @ARGV = ('-') unless @ARGV;
     exit usage() if $fill_gaps and !$consolidate;

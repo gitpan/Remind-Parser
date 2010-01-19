@@ -7,7 +7,7 @@ use vars qw($VERSION);
 
 use Date::DayOfWeek qw(dayofweek);
 
-$VERSION = '0.06';
+$VERSION = '0.07';
 
 # --- Constructor
 
@@ -51,10 +51,13 @@ sub parse {
     }
     while (<$fh>) {
         chomp;
-        if ($all_done) {
-            die "Spurious input at end of input: $_"
-                if $self->strict;
-            last;
+        if ($all_done) { 
+            if ($_ !~ /^# rem2ps begin$/ ) {
+                die "Spurious input at end of input: $_"
+                    if $self->strict;
+                last;
+            } 
+            else { $past_header = 0 ; $all_done = 0 }
         }
         if (/^# fileinfo (\d+) (.+)/) {
             ($line, $file) = ($1, $2);
@@ -209,15 +212,15 @@ sub _fill_gaps {
 
 BEGIN {
     # Adapted from Date::ISO8601 by Zefram
-	my @days_in_month = (undef, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
+    my @days_in_month = (undef, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
     sub _is_leap_year {
         my ($y) = @_;
         return $y % 4 == 0 && ($y % 100 != 0 || $y % 400 == 0);
     }
-	sub _last_day_in_month {
-		my ($y, $m) = @_;
-		#die unless $m >= 1 && $m <= 12;
-		return $m == 2
+    sub _last_day_in_month {
+        my ($y, $m) = @_;
+        #die unless $m >= 1 && $m <= 12;
+        return $m == 2
             ? ( _is_leap_year($y) ? 29 : 28 )
             : $days_in_month[$m];
     }
@@ -585,3 +588,4 @@ L<wyrd(1)>
 
 =cut
 
+# vim:fenc=utf-8:et:sw=4:ts=4:sts=4

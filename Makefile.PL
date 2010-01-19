@@ -2,17 +2,17 @@
 use ExtUtils::MakeMaker;
 WriteMakefile
 (
-          'NAME' => 'Remind-Parser',
-          'INSTALLDIRS' => 'site',
-          'PREREQ_PM' => {
-                           'Date::DayOfWeek' => 0,
-                           'Data::Dumper' => 0,
-                           'Test::More' => 0
-                         },
+          'PL_FILES' => {},
           'VERSION_FROM' => 'lib/Remind/Parser.pm',
+          'INSTALLDIRS' => 'site',
           'EXE_FILES' => [
                            'script/rem2yaml'
                          ],
-          'PL_FILES' => {}
+          'NAME' => 'Remind-Parser',
+          'PREREQ_PM' => {
+                           'Test::More' => 0,
+                           'Date::DayOfWeek' => 0,
+                           'Data::Dumper' => 0
+                         }
         )
 ;

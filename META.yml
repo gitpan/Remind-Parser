@@ -1,6 +1,6 @@
 ---
 name: Remind-Parser
-version: 0.06
+version: 0.07
 author:
   - Paul Hoffman (nkuitse AT cpan DOT org)
 abstract: parse `remind -lp' output
@@ -17,7 +17,7 @@ recommends:
 provides:
   Remind::Parser:
     file: lib/Remind/Parser.pm
-    version: 0.06
+    version: 0.07
 generated_by: Module::Build version 0.2808
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html
