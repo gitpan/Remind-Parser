@@ -7,7 +7,9 @@ use vars qw($VERSION);
 
 use Date::DayOfWeek qw(dayofweek);
 
-$VERSION = '0.07';
+$VERSION = '0.08';
+
+my %dow_cache;
 
 # --- Constructor
 
@@ -97,7 +99,7 @@ sub parse {
                     $tag eq '*'     ? () : ('tag'     => $tag),
                     $special eq '*' ? () : ('special' => $special),
                 );
-                $reminder{'date'} = sprintf('%04d%02d%02d', @reminder{qw(year month day)});
+                $reminder{'date'} = _format_date(@reminder{qw(year month day)});
                 my ($begin, $end);
                 if ($offset eq '*') {
                     # Untimed (whole day) reminder
@@ -105,9 +107,9 @@ sub parse {
                 }
                 else {
                     # Timed reminder
-                    $reminder{'hour'}   = int($offset / 60);
-                    $reminder{'minute'} = $offset % 60;
-                    $reminder{'second'} = 0;
+                    my $H = $reminder{'hour'}   = int($offset / 60);
+                    my $M = $reminder{'minute'} = $offset % 60;
+                    my $S = $reminder{'second'} = 0;
                     if ($duration ne '*') {
                         $reminder{'duration'} = {
                             'hours'   => int($duration / 60),
@@ -116,7 +118,7 @@ sub parse {
                         };
                     }
                 }
-                push @reminders, \%reminder;
+                push @reminders, _normalize_date(\%reminder);
             }
         }
     }
@@ -164,9 +166,9 @@ sub _HMpm2min {
 sub _consolidate_reminders {
     my ($reminders, $date_info) = @_;
     foreach my $r (@$reminders) {
-        my ($year, $month, $day) = @$r{qw/year month day/};
-        my $ymd = _format_date($year, $month, $day);
-        my $info = $date_info->{$ymd} ||= _norm_reminder({
+        my ($ymd, $year, $month, $day) = @$r{qw/date year month day/};
+        my $info = $date_info->{$ymd} ||= _normalize_date({
+            'date'  => $ymd,
             'year'  => $year,
             'month' => $month,
             'day'   => $day,
@@ -181,11 +183,6 @@ sub _sort_date_reminders {
     my ($date_info) = @_;
     foreach my $ymd (keys %$date_info) {
         my $reminders = $date_info->{$ymd}->{'reminders'};
-        foreach my $r (@$reminders) {
-            $r->{'date_time'} = $ymd;
-            $r->{'date_time'} .= sprintf('T%02d%02d00', $r->{'hour'}, $r->{'minute'})
-                unless $r->{'all_day'};
-        }
         # Sort reminders within the date
         @$reminders = sort { $a->{'date_time'} cmp $b->{'date_time'} } @$reminders;
     }
@@ -199,7 +196,8 @@ sub _fill_gaps {
         if (!exists $date_info->{$dt}) {
             my ($y, $m, $d) = _parse_date($dt);
             my $ymd = _format_date($y, $m, $d);
-            $date_info->{$dt} = _norm_reminder({
+            $date_info->{$dt} = _normalize_date({
+                'date'      => $ymd,
                 'year'      => $y,
                 'month'     => $m,
                 'day'       => $d,
@@ -226,11 +224,11 @@ BEGIN {
     }
 }
 
-sub _norm_reminder {
+sub _normalize_date {
     my ($r) = @_;
     my ($y, $m, $d) = @$r{qw(year month day)};
-    $r->{'date'} = _format_date($y, $m, $d);
-    $r->{'day_of_week'} = dayofweek($d, $m, $y) || 7;  # Sun --> 7, not 0
+    my $ymd = $r->{'date'} ||= _format_date($y, $m, $d);
+    $r->{'day_of_week'} ||= $dow_cache{$ymd} ||= dayofweek($d, $m, $y) || 7;  # Sun --> 7, not 0
     if ($r->{'all_day'}) {
         $r->{'date_time'} = $r->{'date'};
     }
@@ -239,10 +237,6 @@ sub _norm_reminder {
         $r->{'date_time'} = $r->{'date'} . _format_time($H, $M, $S);
     }
     return $r;
-}
-
-sub _norm_date {
-    _format_date(_parse_date($_[0]))
 }
 
 sub _parse_date {
@@ -259,29 +253,26 @@ sub _format_date {
 sub _format_time {
     my ($H, $M, $S) = @_;
     return '' unless defined $H;
-    return sprintf('T%02d%02d%02d', $H || 0, $M || 0, $S || 0);
+    return sprintf('T%02d%02d%02d', $H, $M || 0, $S || 0);
 }
 
 sub _day_after {
     my ($dt) = @_;
     my ($y, $m, $d) = _parse_date($dt);
-    my $n = _last_day_in_month($y, $m);
-    if ($d == $n) {
-        if ($m == 12) {
-            # YYYY-12-31 --> (YYYY+1)-01-01
-            $y++;
-            $m = 1;
-            $d = 1;
-        }
-        else {
-            # YYYY-MM-nn --> YYYY-(MM+1)-01
-            $m++;
-            $d = 1;
-        }
-    }
-    else {
+    if ($d < 28 || $d != _last_day_in_month($y, $m)) {
         # YYYY-MM-DD --> YYYY-MM-(DD+1)
         $d++;
+    }
+    elsif ($m == 12) {
+        # YYYY-12-31 --> (YYYY+1)-01-01
+        $y++;
+        $m = 1;
+        $d = 1;
+    }
+    else {
+        # YYYY-MM-nn --> YYYY-(MM+1)-01
+        $m++;
+        $d = 1;
     }
     return _format_date($y, $m, $d);
 }
@@ -289,18 +280,16 @@ sub _day_after {
 sub _day_before {
     my ($dt) = @_;
     my ($y, $m, $d) = _parse_date($dt);
-    if ($d == 1) {
-        if ($m == 1) {
-            $y--;
-            $m = 12;
-            $d = 1;
-        }
-        else {
-            $d = _last_day_in_month($y, --$m);
-        }
+    if ($d > 1) {
+        $d--;
+    }
+    elsif ($m == 1) {
+        $y--;
+        $m = 12;
+        $d = 31;
     }
     else {
-        $d--;
+        $d = _last_day_in_month($y, --$m);
     }
     return _format_date($y, $m, $d);
 }

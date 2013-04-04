@@ -1,35 +1,37 @@
+
 use strict;
 use warnings;
 
-use Module::Build;
+use Module::Build 0.3601;
 
-my $has_yaml;
-eval { require YAML; $has_yaml = 1; };
 
-my $build = Module::Build->new(
-    'module_name'        => 'Remind-Parser',
-    'dist_author'        => 'Paul Hoffman (nkuitse AT cpan DOT org)',
-    'dist_version_from'  => 'lib/Remind/Parser.pm',
-    'requires'           => {
-        'Date::DayOfWeek' => 0,
-    },
-    'recommends'         => {
-        'YAML' => 0,
-    },
-    'build_requires'     => {
-        'Test::More' => 0,
-        'Data::Dumper' => 0,
-    },
-    'license'            => 'perl',
-    'create_readme'      => 0,
-    'create_makefile_pl' => 'traditional',
+my %module_build_args = (
+  "build_requires" => {
+    "Data::Dumper" => 0,
+    "Module::Build" => "0.3601",
+    "Test::More" => 0
+  },
+  "configure_requires" => {
+    "ExtUtils::MakeMaker" => "6.30",
+    "Module::Build" => "0.3601"
+  },
+  "dist_abstract" => "parse `remind -lp' output",
+  "dist_author" => [
+    "Paul Hoffman <nkuitse\@cpan.org>"
+  ],
+  "dist_name" => "Remind-Parser",
+  "dist_version" => "0.08",
+  "license" => "perl",
+  "module_name" => "Remind::Parser",
+  "recommends" => {},
+  "recursive_test_files" => 1,
+  "requires" => {
+    "Date::DayOfWeek" => 0
+  },
+  "script_files" => []
 );
 
-if ($has_yaml) {
-    $build->script_files(['script/rem2yaml']);
-}
-else {
-    print STDERR "YAML is not available, so rem2yaml will not be installed\n";
-}
+
+my $build = Module::Build->new(%module_build_args);
 
 $build->create_build_script;

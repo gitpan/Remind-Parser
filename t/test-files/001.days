@@ -9,6 +9,7 @@ $VAR1 = [
                                'description' => 'Havdalah at 19:59',
                                'file' => '/home/luser/ktt/calendar/jewish-holidays.rem',
                                'day' => '1',
+                               'day_of_week' => 6,
                                'date_time' => '20070901',
                                'line' => '174',
                                'all_day' => '1',
@@ -31,6 +32,7 @@ $VAR1 = [
                                'description' => 'Clean bathrooms',
                                'file' => '/home/luser/.reminders',
                                'day' => '2',
+                               'day_of_week' => 7,
                                'tag' => 'noweight',
                                'date_time' => '20070902',
                                'line' => '40',
@@ -41,6 +43,7 @@ $VAR1 = [
                                'instance' => '1',
                                'event' => '2',
                                'date' => '20070902',
+                               'day_of_week' => 7,
                                'second' => '0',
                                'month' => '9',
                                'description' => '6:30pm Cook dinner',
@@ -73,7 +76,8 @@ $VAR1 = [
                                'date_time' => '20070927',
                                'line' => '56',
                                'all_day' => '1',
-                               'year' => '2007'
+                               'year' => '2007',
+                               'day_of_week' => '4',
                              },
                              {
                                'instance' => '1',
@@ -94,7 +98,8 @@ $VAR1 = [
                                'tag' => ':paul:work:',
                                'date_time' => '20070927T130000',
                                'line' => '124',
-                               'year' => '2007'
+                               'year' => '2007',
+                               'day_of_week' => '4',
                              },
                              {
                                'instance' => '1',
@@ -110,7 +115,8 @@ $VAR1 = [
                                'tag' => ':travel:',
                                'date_time' => '20070927T140000',
                                'line' => '125',
-                               'year' => '2007'
+                               'year' => '2007',
+                               'day_of_week' => '4',
                              },
                              {
                                'instance' => '1',
@@ -122,6 +128,7 @@ $VAR1 = [
                                'hour' => '14',
                                'file' => '/home/luser/.reminders',
                                'day' => '27',
+                               'day_of_week' => '4',
                                'minute' => '30',
                                'duration' => {
                                                'seconds' => '0',
@@ -152,7 +159,8 @@ $VAR1 = [
                                'date_time' => '20070928',
                                'line' => '173',
                                'all_day' => '1',
-                               'year' => '2007'
+                               'year' => '2007',
+                               'day_of_week' => '5',
                              },
                              {
                                'instance' => '1',
@@ -168,7 +176,8 @@ $VAR1 = [
                                'tag' => 'noweight',
                                'date_time' => '20070928T173000',
                                'line' => '45',
-                               'year' => '2007'
+                               'year' => '2007',
+                               'day_of_week' => '5',
                              }
                            ],
             'date' => '20070928',
@@ -191,7 +200,8 @@ $VAR1 = [
                                'date_time' => '20070929',
                                'line' => '42',
                                'all_day' => '1',
-                               'year' => '2007'
+                               'year' => '2007',
+                               'day_of_week' => '6',
                              },
                              {
                                'instance' => '1',
@@ -206,7 +216,8 @@ $VAR1 = [
                                'minute' => '0',
                                'date_time' => '20070929T120000',
                                'line' => '17',
-                               'year' => '2007'
+                               'year' => '2007',
+                               'day_of_week' => '6',
                              }
                            ],
             'date' => '20070929',
@@ -229,7 +240,8 @@ $VAR1 = [
                                'date_time' => '20070930',
                                'line' => '40',
                                'all_day' => '1',
-                               'year' => '2007'
+                               'year' => '2007',
+                               'day_of_week' => '7',
                              },
                              {
                                'instance' => '1',
@@ -243,7 +255,8 @@ $VAR1 = [
                                'date_time' => '20070930',
                                'line' => '41',
                                'all_day' => '1',
-                               'year' => '2007'
+                               'year' => '2007',
+                               'day_of_week' => '7',
                              },
                              {
                                'instance' => '2',
@@ -259,7 +272,8 @@ $VAR1 = [
                                'tag' => 'noweight',
                                'date_time' => '20070930T183000',
                                'line' => '46',
-                               'year' => '2007'
+                               'year' => '2007',
+                               'day_of_week' => '7',
                              }
                            ],
             'date' => '20070930',
